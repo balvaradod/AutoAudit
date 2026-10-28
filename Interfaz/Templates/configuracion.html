@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<div class="caja">
+  <h2>Configuración actual</h2>
+  {% if filas %}
+  <table>
+    <tr><th>Tabla</th><th>Trigger activo</th><th>Columnas auditadas</th><th>Eventos</th></tr>
+    {% for esquema, tabla, activa, columnas, eventos in filas %}
+    <tr>
+      <td>{{ esquema }}.{{ tabla }}</td>
+      <td>{{ 'Sí' if activa else 'No' }}</td>
+      <td>{{ columnas or '-' }}</td>
+      <td>{{ eventos or '-' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>Todavía no hay tablas configuradas.</p>
+  {% endif %}
+</div>
+{% endblock %}

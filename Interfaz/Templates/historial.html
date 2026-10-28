@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<div class="caja">
+  <h2>Historial de cambios</h2>
+  <form method="get">
+    <p>
+      <label><input type="radio" name="tipo" value="usuario" {% if f.tipo == 'usuario' %}checked{% endif %}> Por usuario</label>
+      <label><input type="radio" name="tipo" value="columna" {% if f.tipo == 'columna' %}checked{% endif %}> Por columna</label>
+    </p>
+    <p>
+      <label>Usuario:
+        <select name="usuario">
+          <option value="">--</option>
+          {% for u in usuarios %}<option value="{{ u }}" {% if u == f.usuario %}selected{% endif %}>{{ u }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>Columna:
+        <select name="columna">
+          <option value="">--</option>
+          {% for c in columnas %}<option value="{{ c }}" {% if c == f.columna %}selected{% endif %}>{{ c }}</option>{% endfor %}
+        </select>
+      </label>
+    </p>
+    <p>
+      <label>Desde: <input type="datetime-local" name="desde" value="{{ f.desde }}"></label>
+      <label>Hasta: <input type="datetime-local" name="hasta" value="{{ f.hasta }}"></label>
+    </p>
+    <button type="submit" name="buscar" value="1">Buscar</button>
+    {% if buscado and filas %}
+    <a class="boton" href="{{ url_for('historial_csv', tipo=f.tipo, usuario=f.usuario, columna=f.columna, desde=f.desde, hasta=f.hasta) }}">Exportar CSV</a>
+    {% endif %}
+  </form>
+</div>
+
+{% if buscado and nombres %}
+<div class="caja">
+  {% if filas %}
+  <p>{{ filas|length }} cambio(s) en orden cronológico{% if hay_mas %} (se muestran solo los primeros {{ maximo }}; el CSV trae todos){% endif %}.</p>
+  <table>
+    <tr>
+      <th>Fecha y hora</th><th>Usuario</th><th>IP</th><th>Tabla</th><th>Columna</th>
+      <th>Evento</th><th>Registro</th><th>Valor anterior</th><th>Valor nuevo</th>
+    </tr>
+    {% for r in filas %}
+    <tr>
+      <td>{{ r[1] }}</td><td>{{ r[2] }}</td><td>{{ r[3] }}</td>
+      <td>{{ r[5] }}.{{ r[6] }}</td><td>{{ r[7] }}</td><td>{{ r[8] }}</td><td>{{ r[9] }}</td>
+      <td>{{ '' if r[10] is none else r[10] }}</td><td>{{ '' if r[11] is none else r[11] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No se encontraron cambios con ese filtro.</p>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

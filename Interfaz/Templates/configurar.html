@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<div class="caja">
+  <h2>Configurar auditoría</h2>
+  <form method="get">
+    <label>1. Escoge la tabla:
+      <select name="tabla" onchange="this.form.submit()">
+        <option value="">-- seleccionar --</option>
+        {% for t in tablas %}
+        <option value="{{ t }}" {% if t == tabla %}selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <noscript><button type="submit">Ver columnas</button></noscript>
+  </form>
+</div>
+
+{% if columnas %}
+<div class="caja">
+  <h3>2. Marca qué columnas y qué eventos quieres auditar en {{ tabla }}</h3>
+  <form method="post">
+    <input type="hidden" name="tabla" value="{{ tabla }}">
+    <table>
+      <tr><th>Columna</th><th>Tipo</th>{% for e in eventos %}<th>{{ e }}</th>{% endfor %}</tr>
+      {% for nombre, tipo in columnas %}
+      <tr>
+        <td>{{ nombre }}</td><td>{{ tipo }}</td>
+        {% for e in eventos %}
+        <td style="text-align:center">
+          <input type="checkbox" name="marca" value="{{ nombre }}|{{ e }}"
+                 {% if (nombre ~ '|' ~ e) in activos %}checked{% endif %}>
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
+    <p>
+      <button type="submit" name="accion" value="guardar">Guardar y generar trigger</button>
+      <button type="submit" name="accion" value="quitar" class="rojo"
+              onclick="return confirm('¿Quitar toda la auditoría de esta tabla?')">Desactivar auditoría de la tabla</button>
+    </p>
+  </form>
+</div>
+{% endif %}
+
+{% if codigo %}
+<div class="caja">
+  <h3>Código SQL generado</h3>
+  <pre>{{ codigo }}</pre>
+</div>
+{% endif %}
+{% endblock %}

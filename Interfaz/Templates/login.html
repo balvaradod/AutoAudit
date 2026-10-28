@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<div class="caja" style="max-width:420px;margin:40px auto;">
+  <h2>Iniciar sesión</h2>
+  <p>Entra con tu usuario de PostgreSQL. Solo los administradores pueden configurar la auditoría.</p>
+  <form method="post">
+    <p><label>Servidor<br><input type="text" name="host" value="{{ datos.host }}"></label>
+       <label>Puerto<br><input type="text" name="puerto" value="{{ datos.puerto }}" size="6"></label></p>
+    <p><label>Base de datos<br><input type="text" name="bd" value="{{ datos.bd }}"></label></p>
+    <p><label>Usuario<br><input type="text" name="usuario" value="{{ datos.usuario }}"></label></p>
+    <p><label>Contraseña<br><input type="password" name="clave"></label></p>
+    <button type="submit">Entrar</button>
+  </form>
+</div>
+{% endblock %}
