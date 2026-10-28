@@ -1,0 +1,50 @@
+erDiagram
+    TABLA_AUDITADA ||--o{ COLUMNA_AUDITADA : tiene
+    COLUMNA_AUDITADA ||--o{ CONFIGURACION_AUDITORIA : "se configura en"
+    EVENTO ||--o{ CONFIGURACION_AUDITORIA : "se usa en"
+    CONFIGURACION_AUDITORIA ||--o{ BITACORA : "genera"
+    USUARIO_AUDITADO ||--o{ BITACORA : "realiza"
+    ESTACION_TRABAJO ||--o{ BITACORA : "origen de"
+
+    TABLA_AUDITADA {
+        int id_tabla PK
+        varchar esquema
+        varchar nombre_tabla
+        boolean activa
+        timestamp fecha_creacion
+    }
+    COLUMNA_AUDITADA {
+        int id_columna PK
+        int id_tabla FK
+        varchar nombre_columna
+    }
+    EVENTO {
+        int id_evento PK
+        varchar nombre
+    }
+    CONFIGURACION_AUDITORIA {
+        int id_config PK
+        int id_columna FK
+        int id_evento FK
+        boolean activo
+        timestamp fecha_cambio
+    }
+    USUARIO_AUDITADO {
+        int id_usuario PK
+        varchar nombre_usuario
+    }
+    ESTACION_TRABAJO {
+        int id_estacion PK
+        varchar ip_origen
+        varchar nombre_host
+    }
+    BITACORA {
+        bigint id_bitacora PK
+        int id_config FK
+        int id_usuario FK
+        int id_estacion FK
+        timestamp fecha_hora
+        varchar registro_pk
+        text valor_anterior
+        text valor_nuevo
+    }
